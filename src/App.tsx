@@ -6,6 +6,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { ServiceId } from './config/siteConfig';
 import { Header } from './components/Header';
+import { ProgressBar } from './components/ProgressBar';
 import { Hero } from './components/Hero';
 import { CompanyOverview } from './components/CompanyOverview';
 import { ServicesSection } from './components/ServicesSection';
@@ -109,6 +110,9 @@ export default function App() {
         isDark={isDark}
         onToggleTheme={handleToggleTheme}
       />
+
+      {/* Barre de progression de défilement sous le Header */}
+      <ProgressBar />
 
       {/* Contenu principal */}
       <main id="contenu-principal" className="flex-1 w-full max-w-full overflow-x-hidden">

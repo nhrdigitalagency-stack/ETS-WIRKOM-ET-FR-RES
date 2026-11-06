@@ -32,6 +32,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
   const [expandedServiceId, setExpandedServiceId] = useState<ServiceId | null>(
     'commerce-general'
   );
+  const cardRefs = useRef<(HTMLElement | null)[]>([]);
   const toggleButtonRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const ctaButtonRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
@@ -39,13 +40,20 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
     setExpandedServiceId((prev) => (prev === id ? null : id));
   };
 
-  // Navigation clavier WCAG fluide entre les cartes de services (Flèches, Home, End, Échap)
+  // Gestion clavier WCAG complète sur les cartes de services et leurs boutons (Entrée, Espace, Flèches, Home, End, Échap)
   const handleCardKeyDown = (
     e: React.KeyboardEvent<HTMLElement>,
     index: number,
     serviceId: ServiceId
   ) => {
     const total = siteConfig.services.length;
+
+    // Si le focus est directement sur la carte <article> elle-même, Entrée ou Espace déplie/replie les détails
+    if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault();
+      toggleDetails(serviceId);
+      return;
+    }
 
     if (e.key === 'Escape' && expandedServiceId === serviceId) {
       e.preventDefault();
@@ -54,10 +62,15 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
       return;
     }
 
-    // Navigation directionnelle entre les boutons homologues des cartes
+    // Navigation directionnelle entre cartes ou boutons homologues
+    const isCardFocused = e.target === cardRefs.current[index];
     const isToggleFocused =
       document.activeElement === toggleButtonRefs.current[index];
-    const targetRefs = isToggleFocused ? toggleButtonRefs : ctaButtonRefs;
+    const targetRefs = isCardFocused
+      ? cardRefs
+      : isToggleFocused
+      ? toggleButtonRefs
+      : ctaButtonRefs;
 
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
       e.preventDefault();
@@ -73,6 +86,18 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
     } else if (e.key === 'End') {
       e.preventDefault();
       targetRefs.current[total - 1]?.focus();
+    }
+  };
+
+  // Gestion explicite des touches Entrée et Espace sur les boutons d'action
+  const handleButtonKeyDown = (
+    e: React.KeyboardEvent<HTMLButtonElement>,
+    action: () => void
+  ) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      e.stopPropagation();
+      action();
     }
   };
 
@@ -99,13 +124,14 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
           </p>
         </div>
 
-        {/* Grille asymétrique avec transitions Tailwind fluides au survol et gestion du focus clavier WCAG */}
+        {/* Grille asymétrique avec transitions Tailwind fluides au survol et gestion complète du focus clavier WCAG */}
         <div className="mt-7 sm:mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-7">
           {siteConfig.services.map((service, index) => {
             const IconComponent = iconMap[service.iconName];
             const isExpanded = expandedServiceId === service.id;
             const isCurrentlySelectedInForm = selectedServiceId === service.id;
             const triggerId = `service-toggle-${service.id}`;
+            const titleId = `service-title-${service.id}`;
             const colSpanClass = isExpanded
               ? 'md:col-span-2 lg:col-span-12'
               : index < 2
@@ -115,8 +141,14 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
             return (
               <article
                 key={service.id}
+                ref={(el) => {
+                  cardRefs.current[index] = el;
+                }}
+                tabIndex={0}
+                role="group"
+                aria-labelledby={titleId}
                 onKeyDown={(e) => handleCardKeyDown(e, index, service.id)}
-                className={`group ${colSpanClass} w-full min-w-0 rounded-2xl bg-white dark:bg-[#1B1E1C] border p-4 sm:p-6 lg:p-7 flex flex-col justify-between transform-gpu transition-all duration-300 ease-out hover:scale-105 hover:translate-y-[-4px] focus-within:scale-[1.01] focus-within:translate-y-[-2px] focus-within:ring-2 focus-within:ring-[#FF6600] focus-within:ring-offset-2 dark:focus-within:ring-offset-[#121413] motion-reduce:transition-none motion-reduce:hover:scale-100 motion-reduce:hover:translate-y-0 motion-reduce:focus-within:scale-100 motion-reduce:focus-within:translate-y-0 hover:z-10 focus-within:z-10 ${
+                className={`group ${colSpanClass} w-full min-w-0 rounded-2xl bg-white dark:bg-[#1B1E1C] border p-4 sm:p-6 lg:p-7 flex flex-col justify-between transform-gpu transition-all duration-300 ease-out hover:scale-105 hover:translate-y-[-4px] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6600] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#121413] focus-within:scale-[1.01] focus-within:translate-y-[-2px] focus-within:ring-2 focus-within:ring-[#FF6600] focus-within:ring-offset-2 dark:focus-within:ring-offset-[#121413] motion-reduce:transition-none motion-reduce:hover:scale-100 motion-reduce:hover:translate-y-0 motion-reduce:focus-within:scale-100 motion-reduce:focus-within:translate-y-0 hover:z-10 focus-within:z-10 ${
                   isCurrentlySelectedInForm
                     ? 'border-[#115B38] dark:border-[#42C082] shadow-[0_8px_28px_rgb(17,91,56,0.10)] dark:shadow-[0_8px_28px_rgb(0,0,0,0.4)]'
                     : 'border-[#E2E7E2] dark:border-[#2C332E] hover:border-[#FF6600]/70 dark:hover:border-[#FF6600]/70 hover:shadow-[0_14px_34px_rgb(38,38,38,0.10)] dark:hover:shadow-[0_14px_34px_rgb(0,0,0,0.5)]'
@@ -145,7 +177,10 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                   </div>
 
                   {/* Titre et description officielle */}
-                  <h3 className="mt-4 sm:mt-5 text-base sm:text-xl font-bold text-[#262626] dark:text-[#F3F5F3] group-hover:text-[#115B38] dark:group-hover:text-[#FF6600] transition-colors duration-300 break-words">
+                  <h3
+                    id={titleId}
+                    className="mt-4 sm:mt-5 text-base sm:text-xl font-bold text-[#262626] dark:text-[#F3F5F3] group-hover:text-[#115B38] dark:group-hover:text-[#FF6600] transition-colors duration-300 break-words"
+                  >
                     {service.title}
                   </h3>
                   <p className="mt-2 sm:mt-2.5 text-xs sm:text-base text-[#626B65] dark:text-[#B4BEB8] leading-relaxed break-words">
@@ -160,7 +195,11 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                       ctaButtonRefs.current[index] = el;
                     }}
                     type="button"
+                    tabIndex={0}
                     onClick={() => onSelectService(service.id)}
+                    onKeyDown={(e) =>
+                      handleButtonKeyDown(e, () => onSelectService(service.id))
+                    }
                     className="inline-flex min-h-[44px] w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-[#115B38] px-4 py-2.5 text-xs sm:text-sm font-semibold text-white hover:bg-[#0c4329] active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6600] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#1B1E1C] transition-all text-center"
                   >
                     <span className="truncate">{service.ctaLabel}</span>
@@ -176,7 +215,11 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                     }}
                     id={triggerId}
                     type="button"
+                    tabIndex={0}
                     onClick={() => toggleDetails(service.id)}
+                    onKeyDown={(e) =>
+                      handleButtonKeyDown(e, () => toggleDetails(service.id))
+                    }
                     aria-expanded={isExpanded}
                     aria-controls={`details-${service.id}`}
                     className="inline-flex min-h-[42px] w-full sm:w-auto items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-xs sm:text-sm font-medium text-[#262626] dark:text-[#D5DDD8] hover:bg-[#F7F8F6] dark:hover:bg-[#252A27] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6600] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#1B1E1C] transition-colors text-center"

@@ -12,14 +12,27 @@ export const FAQ: React.FC = () => {
     );
   };
 
-  // Navigation clavier WAI-ARIA complète entre les en-têtes d'accordéons (Flèches Haut/Bas, Début, Fin)
+  // Gestion clavier complète (WCAG / WAI-ARIA) : Entrée, Espace, Flèches Haut/Bas, Début, Fin, Échap
   const handleKeyDown = (
     e: React.KeyboardEvent<HTMLButtonElement>,
-    index: number
+    index: number,
+    id: string
   ) => {
     const total = siteConfig.faq.length;
-    let nextIndex: number | null = null;
 
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      toggleItem(id);
+      return;
+    }
+
+    if (e.key === 'Escape' && openIds.includes(id)) {
+      e.preventDefault();
+      setOpenIds((prev) => prev.filter((item) => item !== id));
+      return;
+    }
+
+    let nextIndex: number | null = null;
     if (e.key === 'ArrowDown') {
       e.preventDefault();
       nextIndex = (index + 1) % total;
@@ -78,7 +91,8 @@ export const FAQ: React.FC = () => {
                 </p>
                 <a
                   href="#contact"
-                  className="mt-2 inline-block rounded font-semibold text-[#115B38] dark:text-[#42C082] underline underline-offset-4 hover:text-[#262626] dark:hover:text-[#FF6600] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6600] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#1B1E1C]"
+                  tabIndex={0}
+                  className="mt-2 inline-block rounded px-1 -mx-1 font-semibold text-[#115B38] dark:text-[#42C082] underline underline-offset-4 hover:text-[#262626] dark:hover:text-[#FF6600] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6600] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#1B1E1C]"
                 >
                   Consulter les coordonnées →
                 </a>
@@ -112,11 +126,12 @@ export const FAQ: React.FC = () => {
                       }}
                       id={buttonId}
                       type="button"
+                      tabIndex={0}
                       onClick={() => toggleItem(item.id)}
-                      onKeyDown={(e) => handleKeyDown(e, idx)}
+                      onKeyDown={(e) => handleKeyDown(e, idx, item.id)}
                       aria-expanded={isOpen}
                       aria-controls={panelId}
-                      className="group w-full text-left px-3.5 sm:px-6 py-3.5 sm:py-5 flex items-center justify-between gap-3 rounded-2xl focus:outline-none min-w-0"
+                      className="group w-full text-left px-3.5 sm:px-6 py-3.5 sm:py-5 flex items-center justify-between gap-3 rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6600] min-w-0"
                     >
                       <span className="flex items-start gap-2 sm:gap-3 text-xs sm:text-base font-semibold text-[#262626] dark:text-[#F3F5F3] group-focus-visible:text-[#115B38] dark:group-focus-visible:text-[#FF6600] min-w-0 transition-colors">
                         <span className="font-mono text-xs font-bold text-[#FF6600] tabular-nums mt-0.5 sm:mt-1 shrink-0">
@@ -145,7 +160,17 @@ export const FAQ: React.FC = () => {
                       id={panelId}
                       role="region"
                       aria-labelledby={buttonId}
-                      className="px-3.5 sm:px-6 pb-4 sm:pb-5 pt-2 text-xs sm:text-sm text-[#626B65] dark:text-[#B4BEB8] leading-relaxed border-t border-[#E2E7E2]/60 dark:border-[#2C332E]"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Escape') {
+                          e.preventDefault();
+                          setOpenIds((prev) =>
+                            prev.filter((openId) => openId !== item.id)
+                          );
+                          triggerRefs.current[idx]?.focus();
+                        }
+                      }}
+                      className="px-3.5 sm:px-6 pb-4 sm:pb-5 pt-2 text-xs sm:text-sm text-[#626B65] dark:text-[#B4BEB8] leading-relaxed border-t border-[#E2E7E2]/60 dark:border-[#2C332E] rounded-b-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#FF6600]"
                     >
                       <p className="pl-5 sm:pl-7 break-words">{item.answer}</p>
                     </div>

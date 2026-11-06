@@ -95,7 +95,15 @@ export const ServiceDetails: React.FC<ServiceDetailsProps> = ({
             </div>
             <button
               type="button"
+              tabIndex={0}
               onClick={() => onSelectForQuote(service.id)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onSelectForQuote(service.id);
+                }
+              }}
               className="inline-flex items-center gap-1.5 rounded-md px-1.5 py-1 font-semibold text-[#115B38] dark:text-[#42C082] hover:text-[#262626] dark:hover:text-[#FF6600] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6600] text-left sm:text-right underline underline-offset-4 shrink-0"
             >
               <span>Remplir le formulaire pour ce service</span>

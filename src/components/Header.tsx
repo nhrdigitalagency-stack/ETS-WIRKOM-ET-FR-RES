@@ -15,34 +15,20 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const firstMenuLinkRef = useRef<HTMLAnchorElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const updateScrollMetrics = () => {
-      const scrollTop = window.scrollY;
-      setIsScrolled(scrollTop > 16);
-
-      const docHeight =
-        document.documentElement.scrollHeight -
-        document.documentElement.clientHeight;
-      if (docHeight > 0) {
-        const progress = Math.min(1, Math.max(0, scrollTop / docHeight));
-        setScrollProgress(progress);
-      } else {
-        setScrollProgress(0);
-      }
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 16);
     };
 
-    window.addEventListener('scroll', updateScrollMetrics, { passive: true });
-    window.addEventListener('resize', updateScrollMetrics, { passive: true });
-    updateScrollMetrics();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
 
     return () => {
-      window.removeEventListener('scroll', updateScrollMetrics);
-      window.removeEventListener('resize', updateScrollMetrics);
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
@@ -73,8 +59,6 @@ export const Header: React.FC<HeaderProps> = ({
       setMobileMenuOpen(false);
     }
   };
-
-  const progressPercentage = Math.round(scrollProgress * 100);
 
   return (
     <header className="sticky top-2 sm:top-3 z-50 w-full max-w-full px-2.5 sm:px-6 lg:px-8 transition-all duration-200">
@@ -213,21 +197,6 @@ export const Header: React.FC<HeaderProps> = ({
               )}
             </button>
           </div>
-        </div>
-
-        {/* Barre de progression de défilement (Scroll Progress Bar) fixée sous le header */}
-        <div
-          role="progressbar"
-          aria-label="Progression de lecture de la page"
-          aria-valuemin={0}
-          aria-valuemax={100}
-          aria-valuenow={progressPercentage}
-          className="h-1 w-full bg-[#E2E7E2]/60 dark:bg-[#2C332E]/70 overflow-hidden"
-        >
-          <div
-            className="h-full w-full origin-left bg-gradient-to-r from-[#115B38] via-[#FF6600] to-[#FF6600] transform-gpu transition-transform duration-100 ease-out"
-            style={{ transform: `scaleX(${scrollProgress})` }}
-          />
         </div>
 
         {/* Menu Mobile accessible */}
