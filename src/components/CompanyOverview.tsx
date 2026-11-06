@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ArrowRight, MapPin, Building2, Layers, CheckCircle2 } from 'lucide-react';
 import { siteConfig, ServiceId } from '../config/siteConfig';
 
@@ -9,6 +9,8 @@ interface CompanyOverviewProps {
 export const CompanyOverview: React.FC<CompanyOverviewProps> = ({
   onSelectService,
 }) => {
+  const [imgError, setImgError] = useState(false);
+
   return (
     <section
       id="entreprise"
@@ -34,8 +36,30 @@ export const CompanyOverview: React.FC<CompanyOverviewProps> = ({
               {siteConfig.companyOverview.description}
             </p>
 
+            {/* Visuel d'illustration éditorial */}
+            {!imgError && (
+              <div className="mt-5 sm:mt-6 relative rounded-2xl overflow-hidden border border-[#E2E7E2] dark:border-[#2C332E] bg-[#F7F8F6] dark:bg-[#1E2320]">
+                <div className="aspect-16/9 w-full overflow-hidden">
+                  <img
+                    src={siteConfig.companyOverview.imageUrl}
+                    alt={siteConfig.companyOverview.imageAlt}
+                    width={800}
+                    height={450}
+                    loading="lazy"
+                    referrerPolicy="no-referrer"
+                    onError={() => setImgError(true)}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div className="px-3.5 py-2 bg-[#F7F8F6] dark:bg-[#1E2320] border-t border-[#E2E7E2] dark:border-[#2C332E] flex items-center justify-between gap-2 text-[11px] text-[#626B65] dark:text-[#A3ADA7]">
+                  <span>Coordination multisectorielle · Commerce, Services & Événementiel</span>
+                  <span className="shrink-0">Visuel d’illustration</span>
+                </div>
+              </div>
+            )}
+
             {/* Points de repère factuels */}
-            <div className="mt-6 sm:mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
+            <div className="mt-5 sm:mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
               <div className="rounded-xl bg-[#F7F8F6] dark:bg-[#1E2320] border border-[#E2E7E2] dark:border-[#2C332E] p-4 sm:p-5 min-w-0">
                 <div className="flex items-center gap-2 text-[#115B38] dark:text-[#42C082] font-semibold text-sm">
                   <Layers className="h-4 w-4 text-[#FF6600] shrink-0" aria-hidden="true" />
@@ -57,7 +81,7 @@ export const CompanyOverview: React.FC<CompanyOverviewProps> = ({
               </div>
             </div>
 
-            <div className="mt-4 sm:mt-6 rounded-xl bg-[#EEF5F0] dark:bg-[#115B38]/20 border border-[#115B38]/15 dark:border-[#115B38]/40 p-3.5 sm:p-4 flex items-start gap-2.5 sm:gap-3 min-w-0">
+            <div className="mt-4 sm:mt-5 rounded-xl bg-[#EEF5F0] dark:bg-[#115B38]/20 border border-[#115B38]/15 dark:border-[#115B38]/40 p-3.5 sm:p-4 flex items-start gap-2.5 sm:gap-3 min-w-0">
               <Building2 className="h-5 w-5 text-[#115B38] dark:text-[#42C082] shrink-0 mt-0.5" aria-hidden="true" />
               <div className="text-xs sm:text-sm text-[#262626] dark:text-[#F3F5F3] break-words min-w-0">
                 <span className="font-semibold">Dénomination officielle : </span>
@@ -69,7 +93,7 @@ export const CompanyOverview: React.FC<CompanyOverviewProps> = ({
           </div>
 
           {/* Bloc interactif : « Parlons de votre besoin » */}
-          <div className="lg:col-span-6 min-w-0 w-full">
+          <div className="lg:col-span-6 min-w-0 w-full lg:sticky lg:top-24">
             <div className="rounded-2xl bg-[#F7F8F6] dark:bg-[#1E2320] border border-[#E2E7E2] dark:border-[#2C332E] p-4 sm:p-7 lg:p-8 relative overflow-hidden">
               <div
                 aria-hidden="true"

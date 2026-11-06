@@ -13,6 +13,8 @@ export interface ServiceItem {
   description: string;
   ctaLabel: string;
   iconName: 'PackageCheck' | 'Briefcase' | 'Globe' | 'Utensils' | 'CalendarRange';
+  imageUrl: string;
+  imageAlt: string;
   scopePoints: string[];
   preparationTips: string[];
   cautionNote: string;
@@ -78,10 +80,14 @@ export interface SiteConfig {
     primaryCta: string;
     secondaryCta: string;
     locationBadge: string;
+    imageUrl: string;
+    imageAlt: string;
   };
   companyOverview: {
     title: string;
     description: string;
+    imageUrl: string;
+    imageAlt: string;
     needsPromptTitle: string;
     needsPrompts: {
       id: string;
@@ -156,12 +162,18 @@ export const siteConfig: SiteConfig = {
     primaryCta: 'Présenter mon projet',
     secondaryCta: 'Découvrir nos services',
     locationBadge: 'Yaoundé · Tradex Ahala',
+    imageUrl: '/src/assets/images/service_prestations_services_1793966164289.jpg',
+    imageAlt:
+      'Illustration d’un espace de travail et de coordination de projets professionnels',
   },
 
   companyOverview: {
     title: 'Une entreprise, plusieurs domaines d’intervention.',
     description:
       'ETS WIRKOM ET FRÈRES réunit plusieurs activités pour répondre à des besoins variés en commerce, services, approvisionnement, restauration collective et événementiel. L’entreprise est située à Yaoundé, au niveau de Tradex Ahala.',
+    imageUrl: '/src/assets/images/hero_wirkom_corporate_1793966159764.jpg',
+    imageAlt:
+      'Visuel d’illustration symbolisant les échanges et la coordination multisectorielle',
     needsPromptTitle: 'Parlons de votre besoin',
     needsPrompts: [
       {
@@ -198,6 +210,9 @@ export const siteConfig: SiteConfig = {
         'Présentez vos besoins en produits et fournitures afin d’échanger sur les possibilités d’approvisionnement.',
       ctaLabel: 'Décrire mon besoin',
       iconName: 'PackageCheck',
+      imageUrl: '/src/assets/images/service_commerce_general_1793966162211.jpg',
+      imageAlt:
+        'Illustration d’approvisionnement en fournitures et équipements professionnels',
       scopePoints: [
         'Identification des produits, fournitures ou équipements recherchés',
         'Étude des quantités souhaitées et de la périodicité éventuelle',
@@ -220,6 +235,9 @@ export const siteConfig: SiteConfig = {
         'Échangeons sur votre besoin pour préciser la prestation recherchée, son périmètre et ses modalités.',
       ctaLabel: 'Parler de ma prestation',
       iconName: 'Briefcase',
+      imageUrl: '/src/assets/images/service_prestations_services_1793966164289.jpg',
+      imageAlt:
+        'Illustration de cadrage et planification de prestations de services professionnelles',
       scopePoints: [
         'Analyse du besoin opérationnel ou professionnel exprimé',
         'Cadrage du périmètre d’intervention et des attentes',
@@ -242,6 +260,9 @@ export const siteConfig: SiteConfig = {
         'Contactez l’entreprise pour étudier une demande liée à l’importation ou à l’exportation de marchandises.',
       ctaLabel: 'Présenter ma demande',
       iconName: 'Globe',
+      imageUrl: '/src/assets/images/service_import_export_1793966165057.jpg',
+      imageAlt:
+        'Illustration d’opérations d’import-export et d’acheminement de marchandises',
       scopePoints: [
         'Examen des demandes liées à l’acheminement ou au négoce de marchandises',
         'Prise en compte de la nature des produits et des volumes envisagés',
@@ -264,6 +285,10 @@ export const siteConfig: SiteConfig = {
         'Présentez votre besoin de restauration collective, le nombre de personnes concernées et le contexte de la prestation.',
       ctaLabel: 'Préparer ma demande',
       iconName: 'Utensils',
+      imageUrl:
+        '/src/assets/images/service_restauration_evenementiel_1793966165229.jpg',
+      imageAlt:
+        'Illustration d’un service de restauration collective et de buffet professionnel',
       scopePoints: [
         'Restauration pour structures professionnelles, organisations ou rassemblements',
         'Adaptation selon l’effectif annoncé et la fréquence souhaitée',
@@ -286,6 +311,10 @@ export const siteConfig: SiteConfig = {
         'Partagez les informations essentielles de votre événement pour échanger sur l’accompagnement recherché.',
       ctaLabel: 'Parler de mon événement',
       iconName: 'CalendarRange',
+      imageUrl:
+        '/src/assets/images/service_restauration_evenementiel_1793966165229.jpg',
+      imageAlt:
+        'Illustration d’aménagement et d’organisation de réception événementielle',
       scopePoints: [
         'Écoute et cadrage des besoins liés à votre événement professionnel ou privé',
         'Identification des volets sur lesquels vous recherchez un appui',

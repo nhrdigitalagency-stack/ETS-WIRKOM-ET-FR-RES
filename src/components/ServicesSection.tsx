@@ -32,6 +32,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
   const [expandedServiceId, setExpandedServiceId] = useState<ServiceId | null>(
     'commerce-general'
   );
+  const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
   const cardRefs = useRef<(HTMLElement | null)[]>([]);
   const toggleButtonRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const ctaButtonRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -48,7 +49,6 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
   ) => {
     const total = siteConfig.services.length;
 
-    // Si le focus est directement sur la carte <article> elle-même, Entrée ou Espace déplie/replie les détails
     if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) {
       e.preventDefault();
       toggleDetails(serviceId);
@@ -62,7 +62,6 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
       return;
     }
 
-    // Navigation directionnelle entre cartes ou boutons homologues
     const isCardFocused = e.target === cardRefs.current[index];
     const isToggleFocused =
       document.activeElement === toggleButtonRefs.current[index];
@@ -89,7 +88,6 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
     }
   };
 
-  // Gestion explicite des touches Entrée et Espace sur les boutons d'action
   const handleButtonKeyDown = (
     e: React.KeyboardEvent<HTMLButtonElement>,
     action: () => void
@@ -124,7 +122,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
           </p>
         </div>
 
-        {/* Grille asymétrique avec transitions Tailwind fluides au survol et gestion complète du focus clavier WCAG */}
+        {/* Grille asymétrique avec visuels générés, transitions Tailwind fluides au survol et gestion complète du focus clavier WCAG */}
         <div className="mt-7 sm:mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-7">
           {siteConfig.services.map((service, index) => {
             const IconComponent = iconMap[service.iconName];
@@ -132,6 +130,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
             const isCurrentlySelectedInForm = selectedServiceId === service.id;
             const triggerId = `service-toggle-${service.id}`;
             const titleId = `service-title-${service.id}`;
+            const hasImageError = Boolean(failedImages[service.id]);
             const colSpanClass = isExpanded
               ? 'md:col-span-2 lg:col-span-12'
               : index < 2
@@ -148,108 +147,145 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                 role="group"
                 aria-labelledby={titleId}
                 onKeyDown={(e) => handleCardKeyDown(e, index, service.id)}
-                className={`group ${colSpanClass} w-full min-w-0 rounded-2xl bg-white dark:bg-[#1B1E1C] border p-4 sm:p-6 lg:p-7 flex flex-col justify-between transform-gpu transition-all duration-300 ease-out hover:scale-105 hover:translate-y-[-4px] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6600] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#121413] focus-within:scale-[1.01] focus-within:translate-y-[-2px] focus-within:ring-2 focus-within:ring-[#FF6600] focus-within:ring-offset-2 dark:focus-within:ring-offset-[#121413] motion-reduce:transition-none motion-reduce:hover:scale-100 motion-reduce:hover:translate-y-0 motion-reduce:focus-within:scale-100 motion-reduce:focus-within:translate-y-0 hover:z-10 focus-within:z-10 ${
+                className={`group ${colSpanClass} w-full min-w-0 rounded-2xl bg-white dark:bg-[#1B1E1C] border overflow-hidden flex flex-col justify-between transform-gpu transition-all duration-300 ease-out hover:scale-105 hover:translate-y-[-4px] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6600] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#121413] focus-within:scale-[1.01] focus-within:translate-y-[-2px] focus-within:ring-2 focus-within:ring-[#FF6600] focus-within:ring-offset-2 dark:focus-within:ring-offset-[#121413] motion-reduce:transition-none motion-reduce:hover:scale-100 motion-reduce:hover:translate-y-0 motion-reduce:focus-within:scale-100 motion-reduce:focus-within:translate-y-0 hover:z-10 focus-within:z-10 ${
                   isCurrentlySelectedInForm
                     ? 'border-[#115B38] dark:border-[#42C082] shadow-[0_8px_28px_rgb(17,91,56,0.10)] dark:shadow-[0_8px_28px_rgb(0,0,0,0.4)]'
                     : 'border-[#E2E7E2] dark:border-[#2C332E] hover:border-[#FF6600]/70 dark:hover:border-[#FF6600]/70 hover:shadow-[0_14px_34px_rgb(38,38,38,0.10)] dark:hover:shadow-[0_14px_34px_rgb(0,0,0,0.5)]'
                 }`}
               >
-                <div className="min-w-0">
-                  {/* En-tête de la carte : Numéro éditorial + Icône */}
-                  <div className="flex flex-wrap items-center justify-between gap-2.5">
-                    <div className="flex items-center gap-2.5 sm:gap-3">
-                      <span className="text-sm font-mono font-bold text-[#FF6600] tabular-nums">
+                {/* Bandeau visuel d'illustration du service */}
+                <div
+                  className={`relative w-full overflow-hidden bg-[#115B38]/15 ${
+                    isExpanded ? 'h-48 sm:h-60' : 'h-40 sm:h-48'
+                  }`}
+                >
+                  {!hasImageError ? (
+                    <img
+                      src={service.imageUrl}
+                      alt={service.imageAlt}
+                      width={800}
+                      height={450}
+                      loading="lazy"
+                      referrerPolicy="no-referrer"
+                      onError={() =>
+                        setFailedImages((prev) => ({
+                          ...prev,
+                          [service.id]: true,
+                        }))
+                      }
+                      className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="h-full w-full bg-gradient-to-br from-[#115B38] to-[#262626] flex items-center justify-center">
+                      <IconComponent
+                        className="h-10 w-10 text-[#FF6600]"
+                        aria-hidden="true"
+                      />
+                    </div>
+                  )}
+
+                  {/* Scrim de contraste mesuré */}
+                  <div
+                    aria-hidden="true"
+                    className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent"
+                  />
+
+                  {/* Numéro et icône superposés sur le bandeau visuel */}
+                  <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2.5">
+                      <span className="inline-flex items-center justify-center rounded-lg bg-[#262626]/90 px-2.5 py-1 text-xs font-mono font-bold text-[#FF6600] tabular-nums">
                         {service.number}.
                       </span>
-                      <div className="inline-flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-xl bg-[#EEF5F0] dark:bg-[#115B38]/30 text-[#115B38] dark:text-[#42C082] group-hover:bg-[#115B38] group-hover:text-white group-focus-within:bg-[#115B38] group-focus-within:text-white transition-colors duration-300 shrink-0">
-                        <IconComponent
-                          className="h-5 w-5 transition-transform duration-300 group-hover:scale-110"
-                          aria-hidden="true"
-                        />
-                      </div>
+                      <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-[#115B38] text-white shadow-xs">
+                        <IconComponent className="h-4 w-4" aria-hidden="true" />
+                      </span>
                     </div>
 
                     {isCurrentlySelectedInForm && (
-                      <span className="text-xs font-medium text-[#115B38] dark:text-[#42C082] break-words">
-                        Présélectionné dans le devis
+                      <span className="rounded-lg bg-[#115B38]/95 px-2.5 py-1 text-[11px] font-semibold text-white">
+                        Présélectionné
                       </span>
                     )}
                   </div>
-
-                  {/* Titre et description officielle */}
-                  <h3
-                    id={titleId}
-                    className="mt-4 sm:mt-5 text-base sm:text-xl font-bold text-[#262626] dark:text-[#F3F5F3] group-hover:text-[#115B38] dark:group-hover:text-[#FF6600] transition-colors duration-300 break-words"
-                  >
-                    {service.title}
-                  </h3>
-                  <p className="mt-2 sm:mt-2.5 text-xs sm:text-base text-[#626B65] dark:text-[#B4BEB8] leading-relaxed break-words">
-                    {service.description}
-                  </p>
                 </div>
 
-                {/* Actions : Bouton CTA spécifique + bouton Demander des informations (détails) */}
-                <div className="mt-5 sm:mt-6 pt-4 sm:pt-5 border-t border-[#E2E7E2] dark:border-[#2C332E] flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center justify-between gap-2.5 sm:gap-3">
-                  <button
-                    ref={(el) => {
-                      ctaButtonRefs.current[index] = el;
-                    }}
-                    type="button"
-                    tabIndex={0}
-                    onClick={() => onSelectService(service.id)}
-                    onKeyDown={(e) =>
-                      handleButtonKeyDown(e, () => onSelectService(service.id))
-                    }
-                    className="inline-flex min-h-[44px] w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-[#115B38] px-4 py-2.5 text-xs sm:text-sm font-semibold text-white hover:bg-[#0c4329] active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6600] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#1B1E1C] transition-all text-center"
-                  >
-                    <span className="truncate">{service.ctaLabel}</span>
-                    <ArrowRight
-                      className="h-4 w-4 text-[#FF6600] shrink-0 transition-transform duration-300 group-hover:translate-x-0.5"
-                      aria-hidden="true"
-                    />
-                  </button>
+                {/* Corps de la carte */}
+                <div className="p-4 sm:p-6 lg:p-7 flex-1 flex flex-col justify-between min-w-0">
+                  <div className="min-w-0">
+                    <h3
+                      id={titleId}
+                      className="text-base sm:text-xl font-bold text-[#262626] dark:text-[#F3F5F3] group-hover:text-[#115B38] dark:group-hover:text-[#FF6600] transition-colors duration-300 break-words"
+                    >
+                      {service.title}
+                    </h3>
+                    <p className="mt-2 sm:mt-2.5 text-xs sm:text-base text-[#626B65] dark:text-[#B4BEB8] leading-relaxed break-words">
+                      {service.description}
+                    </p>
+                  </div>
 
-                  <button
-                    ref={(el) => {
-                      toggleButtonRefs.current[index] = el;
+                  {/* Actions : Bouton CTA spécifique + bouton Demander des informations (détails) */}
+                  <div className="mt-5 sm:mt-6 pt-4 sm:pt-5 border-t border-[#E2E7E2] dark:border-[#2C332E] flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center justify-between gap-2.5 sm:gap-3">
+                    <button
+                      ref={(el) => {
+                        ctaButtonRefs.current[index] = el;
+                      }}
+                      type="button"
+                      tabIndex={0}
+                      onClick={() => onSelectService(service.id)}
+                      onKeyDown={(e) =>
+                        handleButtonKeyDown(e, () => onSelectService(service.id))
+                      }
+                      className="inline-flex min-h-[44px] w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-[#115B38] px-4 py-2.5 text-xs sm:text-sm font-semibold text-white hover:bg-[#0c4329] active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6600] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#1B1E1C] transition-all text-center"
+                    >
+                      <span className="truncate">{service.ctaLabel}</span>
+                      <ArrowRight
+                        className="h-4 w-4 text-[#FF6600] shrink-0 transition-transform duration-300 group-hover:translate-x-0.5"
+                        aria-hidden="true"
+                      />
+                    </button>
+
+                    <button
+                      ref={(el) => {
+                        toggleButtonRefs.current[index] = el;
+                      }}
+                      id={triggerId}
+                      type="button"
+                      tabIndex={0}
+                      onClick={() => toggleDetails(service.id)}
+                      onKeyDown={(e) =>
+                        handleButtonKeyDown(e, () => toggleDetails(service.id))
+                      }
+                      aria-expanded={isExpanded}
+                      aria-controls={`details-${service.id}`}
+                      className="inline-flex min-h-[42px] w-full sm:w-auto items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-xs sm:text-sm font-medium text-[#262626] dark:text-[#D5DDD8] hover:bg-[#F7F8F6] dark:hover:bg-[#252A27] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6600] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#1B1E1C] transition-colors text-center"
+                    >
+                      <span className="truncate">Demander des informations</span>
+                      {isExpanded ? (
+                        <ChevronUp
+                          className="h-4 w-4 text-[#626B65] dark:text-[#A3ADA7] shrink-0"
+                          aria-hidden="true"
+                        />
+                      ) : (
+                        <ChevronDown
+                          className="h-4 w-4 text-[#626B65] dark:text-[#A3ADA7] shrink-0"
+                          aria-hidden="true"
+                        />
+                      )}
+                    </button>
+                  </div>
+
+                  {/* Panneau dépliable accessible */}
+                  <ServiceDetails
+                    service={service}
+                    isOpen={isExpanded}
+                    triggerId={triggerId}
+                    onSelectForQuote={onSelectService}
+                    onClosePanel={() => {
+                      setExpandedServiceId(null);
+                      toggleButtonRefs.current[index]?.focus();
                     }}
-                    id={triggerId}
-                    type="button"
-                    tabIndex={0}
-                    onClick={() => toggleDetails(service.id)}
-                    onKeyDown={(e) =>
-                      handleButtonKeyDown(e, () => toggleDetails(service.id))
-                    }
-                    aria-expanded={isExpanded}
-                    aria-controls={`details-${service.id}`}
-                    className="inline-flex min-h-[42px] w-full sm:w-auto items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-xs sm:text-sm font-medium text-[#262626] dark:text-[#D5DDD8] hover:bg-[#F7F8F6] dark:hover:bg-[#252A27] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6600] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#1B1E1C] transition-colors text-center"
-                  >
-                    <span className="truncate">Demander des informations</span>
-                    {isExpanded ? (
-                      <ChevronUp
-                        className="h-4 w-4 text-[#626B65] dark:text-[#A3ADA7] shrink-0"
-                        aria-hidden="true"
-                      />
-                    ) : (
-                      <ChevronDown
-                        className="h-4 w-4 text-[#626B65] dark:text-[#A3ADA7] shrink-0"
-                        aria-hidden="true"
-                      />
-                    )}
-                  </button>
+                  />
                 </div>
-
-                {/* Panneau dépliable accessible */}
-                <ServiceDetails
-                  service={service}
-                  isOpen={isExpanded}
-                  triggerId={triggerId}
-                  onSelectForQuote={onSelectService}
-                  onClosePanel={() => {
-                    setExpandedServiceId(null);
-                    toggleButtonRefs.current[index]?.focus();
-                  }}
-                />
               </article>
             );
           })}
