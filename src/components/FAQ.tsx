@@ -1,14 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { ChevronDown, ChevronUp, HelpCircle } from 'lucide-react';
 import { siteConfig } from '../config/siteConfig';
 
 export const FAQ: React.FC = () => {
   const [openIds, setOpenIds] = useState<string[]>([siteConfig.faq[0].id]);
+  const triggerRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const toggleItem = (id: string) => {
     setOpenIds((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
+  };
+
+  // Navigation clavier WAI-ARIA complète entre les en-têtes d'accordéons (Flèches Haut/Bas, Début, Fin)
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLButtonElement>,
+    index: number
+  ) => {
+    const total = siteConfig.faq.length;
+    let nextIndex: number | null = null;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      nextIndex = (index + 1) % total;
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      nextIndex = (index - 1 + total) % total;
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      nextIndex = 0;
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      nextIndex = total - 1;
+    }
+
+    if (nextIndex !== null) {
+      triggerRefs.current[nextIndex]?.focus();
+    }
   };
 
   return (
@@ -50,7 +78,7 @@ export const FAQ: React.FC = () => {
                 </p>
                 <a
                   href="#contact"
-                  className="mt-2 inline-block font-semibold text-[#115B38] dark:text-[#42C082] underline underline-offset-4 hover:text-[#262626] dark:hover:text-[#FF6600]"
+                  className="mt-2 inline-block rounded font-semibold text-[#115B38] dark:text-[#42C082] underline underline-offset-4 hover:text-[#262626] dark:hover:text-[#FF6600] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6600] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#1B1E1C]"
                 >
                   Consulter les coordonnées →
                 </a>
@@ -58,8 +86,11 @@ export const FAQ: React.FC = () => {
             </div>
           </div>
 
-          {/* Accordéons accessibles */}
-          <div className="lg:col-span-7 space-y-2.5 sm:space-y-3 min-w-0 w-full">
+          {/* Accordéons accessibles avec navigation clavier WCAG / WAI-ARIA */}
+          <div
+            className="lg:col-span-7 space-y-2.5 sm:space-y-3 min-w-0 w-full"
+            role="presentation"
+          >
             {siteConfig.faq.map((item, idx) => {
               const isOpen = openIds.includes(item.id);
               const panelId = `faq-panel-${item.id}`;
@@ -68,7 +99,7 @@ export const FAQ: React.FC = () => {
               return (
                 <div
                   key={item.id}
-                  className={`rounded-2xl bg-white dark:bg-[#1B1E1C] border transition-colors min-w-0 ${
+                  className={`rounded-2xl bg-white dark:bg-[#1B1E1C] border transition-all min-w-0 focus-within:ring-2 focus-within:ring-[#FF6600] focus-within:ring-offset-2 dark:focus-within:ring-offset-[#121413] ${
                     isOpen
                       ? 'border-[#115B38] dark:border-[#42C082]'
                       : 'border-[#E2E7E2] dark:border-[#2C332E]'
@@ -76,30 +107,34 @@ export const FAQ: React.FC = () => {
                 >
                   <h3>
                     <button
+                      ref={(el) => {
+                        triggerRefs.current[idx] = el;
+                      }}
                       id={buttonId}
                       type="button"
                       onClick={() => toggleItem(item.id)}
+                      onKeyDown={(e) => handleKeyDown(e, idx)}
                       aria-expanded={isOpen}
                       aria-controls={panelId}
-                      className="w-full text-left px-3.5 sm:px-6 py-3.5 sm:py-5 flex items-center justify-between gap-3 rounded-2xl focus-visible:outline-2 focus-visible:outline-[#FF6600] min-w-0"
+                      className="group w-full text-left px-3.5 sm:px-6 py-3.5 sm:py-5 flex items-center justify-between gap-3 rounded-2xl focus:outline-none min-w-0"
                     >
-                      <span className="flex items-start gap-2 sm:gap-3 text-xs sm:text-base font-semibold text-[#262626] dark:text-[#F3F5F3] min-w-0">
+                      <span className="flex items-start gap-2 sm:gap-3 text-xs sm:text-base font-semibold text-[#262626] dark:text-[#F3F5F3] group-focus-visible:text-[#115B38] dark:group-focus-visible:text-[#FF6600] min-w-0 transition-colors">
                         <span className="font-mono text-xs font-bold text-[#FF6600] tabular-nums mt-0.5 sm:mt-1 shrink-0">
                           0{idx + 1}.
                         </span>
                         <span className="break-words">{item.question}</span>
                       </span>
-                      <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-[#F7F8F6] dark:bg-[#252A27] text-[#262626] dark:text-[#F3F5F3] shrink-0">
+                      <span
+                        className={`inline-flex h-8 w-8 items-center justify-center rounded-lg shrink-0 transition-colors ${
+                          isOpen
+                            ? 'bg-[#115B38] text-white'
+                            : 'bg-[#F7F8F6] dark:bg-[#252A27] text-[#262626] dark:text-[#F3F5F3] group-hover:bg-[#EEF5F0] dark:group-hover:bg-[#115B38]/40'
+                        }`}
+                      >
                         {isOpen ? (
-                          <ChevronUp
-                            className="h-4 w-4 text-[#115B38] dark:text-[#42C082]"
-                            aria-hidden="true"
-                          />
+                          <ChevronUp className="h-4 w-4" aria-hidden="true" />
                         ) : (
-                          <ChevronDown
-                            className="h-4 w-4 text-[#626B65] dark:text-[#A3ADA7]"
-                            aria-hidden="true"
-                          />
+                          <ChevronDown className="h-4 w-4" aria-hidden="true" />
                         )}
                       </span>
                     </button>

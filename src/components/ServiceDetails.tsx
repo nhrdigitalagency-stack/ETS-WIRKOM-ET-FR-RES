@@ -6,15 +6,26 @@ import { ServiceItem, ServiceId } from '../config/siteConfig';
 interface ServiceDetailsProps {
   service: ServiceItem;
   isOpen: boolean;
+  triggerId: string;
   onSelectForQuote: (serviceId: ServiceId) => void;
+  onClosePanel: () => void;
 }
 
 export const ServiceDetails: React.FC<ServiceDetailsProps> = ({
   service,
   isOpen,
+  triggerId,
   onSelectForQuote,
+  onClosePanel,
 }) => {
   const shouldReduceMotion = useReducedMotion();
+
+  const handleRegionKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Escape') {
+      e.stopPropagation();
+      onClosePanel();
+    }
+  };
 
   return (
     <AnimatePresence initial={false}>
@@ -22,7 +33,8 @@ export const ServiceDetails: React.FC<ServiceDetailsProps> = ({
         <motion.div
           id={`details-${service.id}`}
           role="region"
-          aria-label={`Détails pour ${service.title}`}
+          aria-labelledby={triggerId}
+          onKeyDown={handleRegionKeyDown}
           initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: -6 }}
           animate={{ opacity: 1, y: 0 }}
           exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -4 }}
@@ -84,7 +96,7 @@ export const ServiceDetails: React.FC<ServiceDetailsProps> = ({
             <button
               type="button"
               onClick={() => onSelectForQuote(service.id)}
-              className="inline-flex items-center gap-1.5 font-semibold text-[#115B38] dark:text-[#42C082] hover:text-[#262626] dark:hover:text-[#FF6600] text-left sm:text-right underline underline-offset-4 shrink-0"
+              className="inline-flex items-center gap-1.5 rounded-md px-1.5 py-1 font-semibold text-[#115B38] dark:text-[#42C082] hover:text-[#262626] dark:hover:text-[#FF6600] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6600] text-left sm:text-right underline underline-offset-4 shrink-0"
             >
               <span>Remplir le formulaire pour ce service</span>
               <ArrowRight className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />

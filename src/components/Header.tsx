@@ -15,16 +15,35 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const firstMenuLinkRef = useRef<HTMLAnchorElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 16);
+    const updateScrollMetrics = () => {
+      const scrollTop = window.scrollY;
+      setIsScrolled(scrollTop > 16);
+
+      const docHeight =
+        document.documentElement.scrollHeight -
+        document.documentElement.clientHeight;
+      if (docHeight > 0) {
+        const progress = Math.min(1, Math.max(0, scrollTop / docHeight));
+        setScrollProgress(progress);
+      } else {
+        setScrollProgress(0);
+      }
     };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    window.addEventListener('scroll', updateScrollMetrics, { passive: true });
+    window.addEventListener('resize', updateScrollMetrics, { passive: true });
+    updateScrollMetrics();
+
+    return () => {
+      window.removeEventListener('scroll', updateScrollMetrics);
+      window.removeEventListener('resize', updateScrollMetrics);
+    };
   }, []);
 
   // Gestion de la touche Échap et du focus pour l'accessibilité mobile
@@ -55,10 +74,12 @@ export const Header: React.FC<HeaderProps> = ({
     }
   };
 
+  const progressPercentage = Math.round(scrollProgress * 100);
+
   return (
     <header className="sticky top-2 sm:top-3 z-50 w-full max-w-full px-2.5 sm:px-6 lg:px-8 transition-all duration-200">
       <div
-        className={`mx-auto w-full max-w-7xl rounded-2xl bg-white/95 dark:bg-[#1B1E1C]/95 backdrop-blur-md border border-[#E2E7E2] dark:border-[#2C332E] transition-all duration-200 ${
+        className={`relative overflow-hidden mx-auto w-full max-w-7xl rounded-2xl bg-white/95 dark:bg-[#1B1E1C]/95 backdrop-blur-md border border-[#E2E7E2] dark:border-[#2C332E] transition-all duration-200 ${
           isScrolled
             ? 'shadow-[0_8px_30px_rgb(38,38,38,0.08)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.45)]'
             : 'shadow-[0_2px_12px_rgb(38,38,38,0.04)] dark:shadow-[0_2px_12px_rgb(0,0,0,0.25)]'
@@ -69,7 +90,7 @@ export const Header: React.FC<HeaderProps> = ({
           <a
             href="#accueil"
             onClick={handleNavClick}
-            className="group flex items-center gap-2 sm:gap-3 min-w-0 shrink rounded-lg focus-visible:outline-2 focus-visible:outline-[#FF6600]"
+            className="group flex items-center gap-2 sm:gap-3 min-w-0 shrink rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6600] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#1B1E1C]"
             aria-label={`${siteConfig.companyName} — Retour à l'accueil`}
           >
             {siteConfig.logoUrl ? (
@@ -117,7 +138,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <a
                   key={item.href}
                   href={item.href}
-                  className={`relative py-1.5 text-sm font-medium transition-colors whitespace-nowrap shrink-0 ${
+                  className={`relative rounded-md px-1.5 py-1.5 text-sm font-medium transition-colors whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6600] ${
                     isActive
                       ? 'text-[#115B38] dark:text-[#42C082] font-semibold'
                       : 'text-[#262626] dark:text-[#D5DDD8] hover:text-[#115B38] dark:hover:text-[#FF6600]'
@@ -126,8 +147,8 @@ export const Header: React.FC<HeaderProps> = ({
                   {item.label}
                   <span
                     aria-hidden="true"
-                    className={`absolute bottom-0 left-0 h-0.5 bg-[#FF6600] transition-all duration-200 ${
-                      isActive ? 'w-full opacity-100' : 'w-0 opacity-0'
+                    className={`absolute bottom-0 left-1.5 right-1.5 h-0.5 bg-[#FF6600] transition-all duration-200 ${
+                      isActive ? 'opacity-100 scale-x-100' : 'opacity-0 scale-x-0'
                     }`}
                   />
                 </a>
@@ -145,7 +166,7 @@ export const Header: React.FC<HeaderProps> = ({
                 isDark ? 'Activer le mode clair' : 'Activer le mode sombre'
               }
               title={isDark ? 'Passer en mode clair' : 'Passer en mode sombre'}
-              className="inline-flex h-10 w-10 sm:w-auto sm:px-3 items-center justify-center gap-2 rounded-xl border border-[#E2E7E2] dark:border-[#2C332E] bg-[#F7F8F6] dark:bg-[#252A27] text-[#262626] dark:text-[#F3F5F3] hover:border-[#115B38] dark:hover:border-[#FF6600] hover:bg-[#EEF5F0] dark:hover:bg-[#2E3531] transition-colors shrink-0"
+              className="inline-flex h-10 w-10 sm:w-auto sm:px-3 items-center justify-center gap-2 rounded-xl border border-[#E2E7E2] dark:border-[#2C332E] bg-[#F7F8F6] dark:bg-[#252A27] text-[#262626] dark:text-[#F3F5F3] hover:border-[#115B38] dark:hover:border-[#FF6600] hover:bg-[#EEF5F0] dark:hover:bg-[#2E3531] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6600] transition-colors shrink-0"
             >
               {isDark ? (
                 <>
@@ -166,7 +187,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             <a
               href="#devis"
-              className="hidden sm:inline-flex items-center gap-2 rounded-xl bg-[#FF6600] px-4 py-2.5 text-sm font-semibold text-[#262626] hover:bg-[#e55c00] active:scale-[0.99] transition-all duration-150 whitespace-nowrap shrink-0 shadow-xs"
+              className="hidden sm:inline-flex items-center gap-2 rounded-xl bg-[#FF6600] px-4 py-2.5 text-sm font-semibold text-[#262626] hover:bg-[#e55c00] active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#115B38] focus-visible:ring-offset-2 transition-all duration-150 whitespace-nowrap shrink-0 shadow-xs"
             >
               <span>Demander un devis</span>
               <ArrowUpRight className="h-4 w-4 shrink-0" aria-hidden="true" />
@@ -183,7 +204,7 @@ export const Header: React.FC<HeaderProps> = ({
                   ? 'Fermer le menu de navigation'
                   : 'Ouvrir le menu de navigation'
               }
-              className="inline-flex lg:hidden h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-xl border border-[#E2E7E2] dark:border-[#2C332E] bg-[#F7F8F6] dark:bg-[#252A27] text-[#262626] dark:text-[#F3F5F3] hover:bg-[#EEF5F0] dark:hover:bg-[#2E3531] transition-colors shrink-0"
+              className="inline-flex lg:hidden h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-xl border border-[#E2E7E2] dark:border-[#2C332E] bg-[#F7F8F6] dark:bg-[#252A27] text-[#262626] dark:text-[#F3F5F3] hover:bg-[#EEF5F0] dark:hover:bg-[#2E3531] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6600] transition-colors shrink-0"
             >
               {mobileMenuOpen ? (
                 <X className="h-5 w-5" aria-hidden="true" />
@@ -192,6 +213,21 @@ export const Header: React.FC<HeaderProps> = ({
               )}
             </button>
           </div>
+        </div>
+
+        {/* Barre de progression de défilement (Scroll Progress Bar) fixée sous le header */}
+        <div
+          role="progressbar"
+          aria-label="Progression de lecture de la page"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={progressPercentage}
+          className="h-1 w-full bg-[#E2E7E2]/60 dark:bg-[#2C332E]/70 overflow-hidden"
+        >
+          <div
+            className="h-full w-full origin-left bg-gradient-to-r from-[#115B38] via-[#FF6600] to-[#FF6600] transform-gpu transition-transform duration-100 ease-out"
+            style={{ transform: `scaleX(${scrollProgress})` }}
+          />
         </div>
 
         {/* Menu Mobile accessible */}
@@ -216,7 +252,7 @@ export const Header: React.FC<HeaderProps> = ({
                     ref={idx === 0 ? firstMenuLinkRef : undefined}
                     href={item.href}
                     onClick={handleNavClick}
-                    className={`flex items-center justify-between gap-2 rounded-xl px-3.5 py-2.5 text-sm sm:text-base font-medium transition-colors ${
+                    className={`flex items-center justify-between gap-2 rounded-xl px-3.5 py-2.5 text-sm sm:text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6600] ${
                       isActive
                         ? 'bg-[#EEF5F0] dark:bg-[#115B38]/30 text-[#115B38] dark:text-[#42C082] font-semibold'
                         : 'text-[#262626] dark:text-[#F3F5F3] hover:bg-[#F7F8F6] dark:hover:bg-[#252A27]'
@@ -238,7 +274,7 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 type="button"
                 onClick={onToggleTheme}
-                className="flex w-full items-center justify-between gap-2 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-medium bg-[#F7F8F6] dark:bg-[#252A27] text-[#262626] dark:text-[#F3F5F3] border border-[#E2E7E2] dark:border-[#2C332E]"
+                className="flex w-full items-center justify-between gap-2 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-medium bg-[#F7F8F6] dark:bg-[#252A27] text-[#262626] dark:text-[#F3F5F3] border border-[#E2E7E2] dark:border-[#2C332E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6600]"
               >
                 <span>Apparence du site</span>
                 <span className="inline-flex items-center gap-1.5 font-semibold text-[#115B38] dark:text-[#FF6600] shrink-0">
@@ -261,7 +297,7 @@ export const Header: React.FC<HeaderProps> = ({
               <a
                 href="#devis"
                 onClick={handleNavClick}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#FF6600] px-4 py-3 text-sm font-semibold text-[#262626] hover:bg-[#e55c00] transition-colors"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#FF6600] px-4 py-3 text-sm font-semibold text-[#262626] hover:bg-[#e55c00] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#115B38] transition-colors"
               >
                 <span>Demander un devis</span>
                 <ArrowUpRight className="h-4 w-4 shrink-0" aria-hidden="true" />
@@ -270,7 +306,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <span>{siteConfig.locationDetail}</span>
                 <a
                   href={`tel:${siteConfig.phones[siteConfig.primaryPhoneIndex]}`}
-                  className="font-medium text-[#115B38] dark:text-[#42C082] underline underline-offset-2"
+                  className="font-medium text-[#115B38] dark:text-[#42C082] underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6600] rounded"
                 >
                   {siteConfig.phonesFormatted[siteConfig.primaryPhoneIndex]}
                 </a>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   PackageCheck,
   Briefcase,
@@ -32,9 +32,48 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
   const [expandedServiceId, setExpandedServiceId] = useState<ServiceId | null>(
     'commerce-general'
   );
+  const toggleButtonRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const ctaButtonRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const toggleDetails = (id: ServiceId) => {
     setExpandedServiceId((prev) => (prev === id ? null : id));
+  };
+
+  // Navigation clavier WCAG fluide entre les cartes de services (Flèches, Home, End, Échap)
+  const handleCardKeyDown = (
+    e: React.KeyboardEvent<HTMLElement>,
+    index: number,
+    serviceId: ServiceId
+  ) => {
+    const total = siteConfig.services.length;
+
+    if (e.key === 'Escape' && expandedServiceId === serviceId) {
+      e.preventDefault();
+      setExpandedServiceId(null);
+      toggleButtonRefs.current[index]?.focus();
+      return;
+    }
+
+    // Navigation directionnelle entre les boutons homologues des cartes
+    const isToggleFocused =
+      document.activeElement === toggleButtonRefs.current[index];
+    const targetRefs = isToggleFocused ? toggleButtonRefs : ctaButtonRefs;
+
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      const nextIndex = (index + 1) % total;
+      targetRefs.current[nextIndex]?.focus();
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      const prevIndex = (index - 1 + total) % total;
+      targetRefs.current[prevIndex]?.focus();
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      targetRefs.current[0]?.focus();
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      targetRefs.current[total - 1]?.focus();
+    }
   };
 
   return (
@@ -60,12 +99,13 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
           </p>
         </div>
 
-        {/* Grille asymétrique avec transitions Tailwind fluides au survol (hover:scale-105 hover:translate-y-[-4px]) */}
+        {/* Grille asymétrique avec transitions Tailwind fluides au survol et gestion du focus clavier WCAG */}
         <div className="mt-7 sm:mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-7">
           {siteConfig.services.map((service, index) => {
             const IconComponent = iconMap[service.iconName];
             const isExpanded = expandedServiceId === service.id;
             const isCurrentlySelectedInForm = selectedServiceId === service.id;
+            const triggerId = `service-toggle-${service.id}`;
             const colSpanClass = isExpanded
               ? 'md:col-span-2 lg:col-span-12'
               : index < 2
@@ -75,7 +115,8 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
             return (
               <article
                 key={service.id}
-                className={`group ${colSpanClass} w-full min-w-0 rounded-2xl bg-white dark:bg-[#1B1E1C] border p-4 sm:p-6 lg:p-7 flex flex-col justify-between transform-gpu transition-all duration-300 ease-out hover:scale-105 hover:translate-y-[-4px] motion-reduce:transition-none motion-reduce:hover:scale-100 motion-reduce:hover:translate-y-0 hover:z-10 ${
+                onKeyDown={(e) => handleCardKeyDown(e, index, service.id)}
+                className={`group ${colSpanClass} w-full min-w-0 rounded-2xl bg-white dark:bg-[#1B1E1C] border p-4 sm:p-6 lg:p-7 flex flex-col justify-between transform-gpu transition-all duration-300 ease-out hover:scale-105 hover:translate-y-[-4px] focus-within:scale-[1.01] focus-within:translate-y-[-2px] focus-within:ring-2 focus-within:ring-[#FF6600] focus-within:ring-offset-2 dark:focus-within:ring-offset-[#121413] motion-reduce:transition-none motion-reduce:hover:scale-100 motion-reduce:hover:translate-y-0 motion-reduce:focus-within:scale-100 motion-reduce:focus-within:translate-y-0 hover:z-10 focus-within:z-10 ${
                   isCurrentlySelectedInForm
                     ? 'border-[#115B38] dark:border-[#42C082] shadow-[0_8px_28px_rgb(17,91,56,0.10)] dark:shadow-[0_8px_28px_rgb(0,0,0,0.4)]'
                     : 'border-[#E2E7E2] dark:border-[#2C332E] hover:border-[#FF6600]/70 dark:hover:border-[#FF6600]/70 hover:shadow-[0_14px_34px_rgb(38,38,38,0.10)] dark:hover:shadow-[0_14px_34px_rgb(0,0,0,0.5)]'
@@ -88,7 +129,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                       <span className="text-sm font-mono font-bold text-[#FF6600] tabular-nums">
                         {service.number}.
                       </span>
-                      <div className="inline-flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-xl bg-[#EEF5F0] dark:bg-[#115B38]/30 text-[#115B38] dark:text-[#42C082] group-hover:bg-[#115B38] group-hover:text-white transition-colors duration-300 shrink-0">
+                      <div className="inline-flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-xl bg-[#EEF5F0] dark:bg-[#115B38]/30 text-[#115B38] dark:text-[#42C082] group-hover:bg-[#115B38] group-hover:text-white group-focus-within:bg-[#115B38] group-focus-within:text-white transition-colors duration-300 shrink-0">
                         <IconComponent
                           className="h-5 w-5 transition-transform duration-300 group-hover:scale-110"
                           aria-hidden="true"
@@ -115,9 +156,12 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                 {/* Actions : Bouton CTA spécifique + bouton Demander des informations (détails) */}
                 <div className="mt-5 sm:mt-6 pt-4 sm:pt-5 border-t border-[#E2E7E2] dark:border-[#2C332E] flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center justify-between gap-2.5 sm:gap-3">
                   <button
+                    ref={(el) => {
+                      ctaButtonRefs.current[index] = el;
+                    }}
                     type="button"
                     onClick={() => onSelectService(service.id)}
-                    className="inline-flex min-h-[44px] w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-[#115B38] px-4 py-2.5 text-xs sm:text-sm font-semibold text-white hover:bg-[#0c4329] active:scale-[0.99] transition-all text-center"
+                    className="inline-flex min-h-[44px] w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-[#115B38] px-4 py-2.5 text-xs sm:text-sm font-semibold text-white hover:bg-[#0c4329] active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6600] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#1B1E1C] transition-all text-center"
                   >
                     <span className="truncate">{service.ctaLabel}</span>
                     <ArrowRight
@@ -127,11 +171,15 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                   </button>
 
                   <button
+                    ref={(el) => {
+                      toggleButtonRefs.current[index] = el;
+                    }}
+                    id={triggerId}
                     type="button"
                     onClick={() => toggleDetails(service.id)}
                     aria-expanded={isExpanded}
                     aria-controls={`details-${service.id}`}
-                    className="inline-flex min-h-[42px] w-full sm:w-auto items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-xs sm:text-sm font-medium text-[#262626] dark:text-[#D5DDD8] hover:bg-[#F7F8F6] dark:hover:bg-[#252A27] transition-colors text-center"
+                    className="inline-flex min-h-[42px] w-full sm:w-auto items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-xs sm:text-sm font-medium text-[#262626] dark:text-[#D5DDD8] hover:bg-[#F7F8F6] dark:hover:bg-[#252A27] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6600] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#1B1E1C] transition-colors text-center"
                   >
                     <span className="truncate">Demander des informations</span>
                     {isExpanded ? (
@@ -152,7 +200,12 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                 <ServiceDetails
                   service={service}
                   isOpen={isExpanded}
+                  triggerId={triggerId}
                   onSelectForQuote={onSelectService}
+                  onClosePanel={() => {
+                    setExpandedServiceId(null);
+                    toggleButtonRefs.current[index]?.focus();
+                  }}
                 />
               </article>
             );
