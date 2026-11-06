@@ -56,20 +56,20 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="sticky top-2 sm:top-3 z-50 px-2.5 sm:px-6 lg:px-8 transition-all duration-200">
+    <header className="sticky top-2 sm:top-3 z-50 w-full max-w-full px-2.5 sm:px-6 lg:px-8 transition-all duration-200">
       <div
-        className={`mx-auto max-w-7xl rounded-2xl bg-white/95 dark:bg-[#1B1E1C]/95 backdrop-blur-md border border-[#E2E7E2] dark:border-[#2C332E] transition-all duration-200 ${
+        className={`mx-auto w-full max-w-7xl rounded-2xl bg-white/95 dark:bg-[#1B1E1C]/95 backdrop-blur-md border border-[#E2E7E2] dark:border-[#2C332E] transition-all duration-200 ${
           isScrolled
             ? 'shadow-[0_8px_30px_rgb(38,38,38,0.08)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.45)]'
             : 'shadow-[0_2px_12px_rgb(38,38,38,0.04)] dark:shadow-[0_2px_12px_rgb(0,0,0,0.25)]'
         }`}
       >
-        <div className="flex items-center justify-between gap-3 sm:gap-6 px-3.5 sm:px-6 py-3 sm:py-3.5">
+        <div className="flex items-center justify-between gap-2 sm:gap-6 px-3 sm:px-6 py-2.5 sm:py-3.5 min-w-0">
           {/* Zone 1 : Signature typographique sobre ou logo autonome */}
           <a
             href="#accueil"
             onClick={handleNavClick}
-            className="group flex items-center gap-2.5 sm:gap-3 whitespace-nowrap shrink-0 rounded-lg focus-visible:outline-2 focus-visible:outline-[#FF6600]"
+            className="group flex items-center gap-2 sm:gap-3 min-w-0 shrink rounded-lg focus-visible:outline-2 focus-visible:outline-[#FF6600]"
             aria-label={`${siteConfig.companyName} — Retour à l'accueil`}
           >
             {siteConfig.logoUrl ? (
@@ -81,7 +81,7 @@ export const Header: React.FC<HeaderProps> = ({
                 className="h-8 sm:h-9 w-auto object-contain"
               />
             ) : (
-              <div className="flex items-center gap-2 sm:gap-2.5">
+              <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
                 {/* Repère géométrique inspiré des angles du document */}
                 <span
                   aria-hidden="true"
@@ -93,11 +93,11 @@ export const Header: React.FC<HeaderProps> = ({
                     style={{ clipPath: 'polygon(100% 0, 0 100%, 100% 100%)' }}
                   />
                 </span>
-                <div className="flex flex-col leading-none">
-                  <span className="text-base sm:text-lg font-bold tracking-tight text-[#262626] dark:text-[#F3F5F3] group-hover:text-[#115B38] dark:group-hover:text-[#FF6600] transition-colors">
+                <div className="flex flex-col leading-none min-w-0">
+                  <span className="text-base sm:text-lg font-bold tracking-tight text-[#262626] dark:text-[#F3F5F3] group-hover:text-[#115B38] dark:group-hover:text-[#FF6600] transition-colors truncate">
                     {siteConfig.shortName}
                   </span>
-                  <span className="text-[9px] sm:text-[10px] font-medium text-[#626B65] dark:text-[#A3ADA7] tracking-wider mt-0.5">
+                  <span className="text-[9px] sm:text-[10px] font-medium text-[#626B65] dark:text-[#A3ADA7] tracking-wider mt-0.5 truncate">
                     {siteConfig.companyName}
                   </span>
                 </div>
@@ -136,7 +136,7 @@ export const Header: React.FC<HeaderProps> = ({
           </nav>
 
           {/* Zone 3 : Bascule Mode Sombre + Action principale à droite + bouton menu mobile */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
             {/* Sélecteur de thème clair / sombre */}
             <button
               type="button"
@@ -145,7 +145,7 @@ export const Header: React.FC<HeaderProps> = ({
                 isDark ? 'Activer le mode clair' : 'Activer le mode sombre'
               }
               title={isDark ? 'Passer en mode clair' : 'Passer en mode sombre'}
-              className="inline-flex h-10 w-10 sm:h-10 sm:w-auto sm:px-3 items-center justify-center gap-2 rounded-xl border border-[#E2E7E2] dark:border-[#2C332E] bg-[#F7F8F6] dark:bg-[#252A27] text-[#262626] dark:text-[#F3F5F3] hover:border-[#115B38] dark:hover:border-[#FF6600] hover:bg-[#EEF5F0] dark:hover:bg-[#2E3531] transition-colors shrink-0"
+              className="inline-flex h-10 w-10 sm:w-auto sm:px-3 items-center justify-center gap-2 rounded-xl border border-[#E2E7E2] dark:border-[#2C332E] bg-[#F7F8F6] dark:bg-[#252A27] text-[#262626] dark:text-[#F3F5F3] hover:border-[#115B38] dark:hover:border-[#FF6600] hover:bg-[#EEF5F0] dark:hover:bg-[#2E3531] transition-colors shrink-0"
             >
               {isDark ? (
                 <>
@@ -183,7 +183,7 @@ export const Header: React.FC<HeaderProps> = ({
                   ? 'Fermer le menu de navigation'
                   : 'Ouvrir le menu de navigation'
               }
-              className="inline-flex lg:hidden h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-xl border border-[#E2E7E2] dark:border-[#2C332E] bg-[#F7F8F6] dark:bg-[#252A27] text-[#262626] dark:text-[#F3F5F3] hover:bg-[#EEF5F0] dark:hover:bg-[#2E3531] transition-colors"
+              className="inline-flex lg:hidden h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-xl border border-[#E2E7E2] dark:border-[#2C332E] bg-[#F7F8F6] dark:bg-[#252A27] text-[#262626] dark:text-[#F3F5F3] hover:bg-[#EEF5F0] dark:hover:bg-[#2E3531] transition-colors shrink-0"
             >
               {mobileMenuOpen ? (
                 <X className="h-5 w-5" aria-hidden="true" />
@@ -201,7 +201,7 @@ export const Header: React.FC<HeaderProps> = ({
             ref={mobileMenuRef}
             role="region"
             aria-label="Menu mobile"
-            className="lg:hidden border-t border-[#E2E7E2] dark:border-[#2C332E] px-4 pt-3 pb-5 bg-white dark:bg-[#1B1E1C] rounded-b-2xl"
+            className="lg:hidden border-t border-[#E2E7E2] dark:border-[#2C332E] px-3.5 sm:px-4 pt-3 pb-4 bg-white dark:bg-[#1B1E1C] rounded-b-2xl"
           >
             <nav
               aria-label="Navigation principale mobile"
@@ -216,16 +216,16 @@ export const Header: React.FC<HeaderProps> = ({
                     ref={idx === 0 ? firstMenuLinkRef : undefined}
                     href={item.href}
                     onClick={handleNavClick}
-                    className={`flex items-center justify-between rounded-xl px-3.5 py-3 text-base font-medium transition-colors ${
+                    className={`flex items-center justify-between gap-2 rounded-xl px-3.5 py-2.5 text-sm sm:text-base font-medium transition-colors ${
                       isActive
                         ? 'bg-[#EEF5F0] dark:bg-[#115B38]/30 text-[#115B38] dark:text-[#42C082] font-semibold'
                         : 'text-[#262626] dark:text-[#F3F5F3] hover:bg-[#F7F8F6] dark:hover:bg-[#252A27]'
                     }`}
                   >
-                    <span>{item.label}</span>
+                    <span className="truncate">{item.label}</span>
                     {isActive && (
-                      <span className="text-xs font-medium text-[#115B38] dark:text-[#42C082]">
-                        Section active
+                      <span className="text-xs font-medium text-[#115B38] dark:text-[#42C082] shrink-0">
+                        Active
                       </span>
                     )}
                   </a>
@@ -238,10 +238,10 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 type="button"
                 onClick={onToggleTheme}
-                className="flex w-full items-center justify-between rounded-xl px-3.5 py-2.5 text-sm font-medium bg-[#F7F8F6] dark:bg-[#252A27] text-[#262626] dark:text-[#F3F5F3] border border-[#E2E7E2] dark:border-[#2C332E]"
+                className="flex w-full items-center justify-between gap-2 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-medium bg-[#F7F8F6] dark:bg-[#252A27] text-[#262626] dark:text-[#F3F5F3] border border-[#E2E7E2] dark:border-[#2C332E]"
               >
                 <span>Apparence du site</span>
-                <span className="inline-flex items-center gap-1.5 font-semibold text-[#115B38] dark:text-[#FF6600]">
+                <span className="inline-flex items-center gap-1.5 font-semibold text-[#115B38] dark:text-[#FF6600] shrink-0">
                   {isDark ? (
                     <>
                       <Sun className="h-4 w-4 text-[#FF6600]" aria-hidden="true" />
@@ -264,7 +264,7 @@ export const Header: React.FC<HeaderProps> = ({
                 className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#FF6600] px-4 py-3 text-sm font-semibold text-[#262626] hover:bg-[#e55c00] transition-colors"
               >
                 <span>Demander un devis</span>
-                <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                <ArrowUpRight className="h-4 w-4 shrink-0" aria-hidden="true" />
               </a>
               <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-[#626B65] dark:text-[#A3ADA7] px-1 pt-1">
                 <span>{siteConfig.locationDetail}</span>

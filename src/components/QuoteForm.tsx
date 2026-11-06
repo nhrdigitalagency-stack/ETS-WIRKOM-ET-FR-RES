@@ -347,41 +347,41 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
   const whatsappCleanNumber = siteConfig.whatsappNumber.replace(/[^\d+]/g, '');
 
   const inputBaseClasses =
-    'w-full rounded-xl border border-[#E2E7E2] dark:border-[#2C332E] bg-white dark:bg-[#141715] px-3.5 py-2.5 text-sm text-[#262626] dark:text-[#F3F5F3] placeholder:text-[#626B65]/60 dark:placeholder:text-[#A3ADA7]/60 focus:border-[#115B38] dark:focus:border-[#FF6600] transition-colors';
+    'w-full min-w-0 rounded-xl border border-[#E2E7E2] dark:border-[#2C332E] bg-white dark:bg-[#141715] px-3 sm:px-3.5 py-2.5 text-sm text-[#262626] dark:text-[#F3F5F3] placeholder:text-[#626B65]/60 dark:placeholder:text-[#A3ADA7]/60 focus:border-[#115B38] dark:focus:border-[#FF6600] transition-colors';
 
   const subInputClasses =
-    'w-full rounded-lg border border-[#E2E7E2] dark:border-[#2C332E] bg-[#F7F8F6] dark:bg-[#1E2320] px-3 py-2 text-xs sm:text-sm text-[#262626] dark:text-[#F3F5F3] placeholder:text-[#626B65]/60 dark:placeholder:text-[#A3ADA7]/60 focus:border-[#115B38] dark:focus:border-[#FF6600] transition-colors';
+    'w-full min-w-0 rounded-lg border border-[#E2E7E2] dark:border-[#2C332E] bg-[#F7F8F6] dark:bg-[#1E2320] px-3 py-2 text-xs sm:text-sm text-[#262626] dark:text-[#F3F5F3] placeholder:text-[#626B65]/60 dark:placeholder:text-[#A3ADA7]/60 focus:border-[#115B38] dark:focus:border-[#FF6600] transition-colors';
 
   return (
     <section
       id="devis"
-      className="py-14 sm:py-24 bg-white dark:bg-[#171A18] border-b border-[#E2E7E2] dark:border-[#2C332E] transition-colors duration-200"
+      className="w-full max-w-full overflow-hidden py-12 sm:py-20 lg:py-24 bg-white dark:bg-[#171A18] border-b border-[#E2E7E2] dark:border-[#2C332E] transition-colors duration-200"
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-12 items-start">
+      <div className="mx-auto w-full max-w-7xl px-3.5 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-7 sm:gap-10 lg:gap-12 items-start">
           {/* Colonne gauche : Explications et récapitulatif */}
-          <div className="lg:col-span-5 lg:sticky lg:top-24">
-            <div className="flex items-center gap-3 text-xs sm:text-sm font-semibold tracking-wide text-[#115B38] dark:text-[#42C082] mb-3">
+          <div className="lg:col-span-5 lg:sticky lg:top-24 min-w-0 w-full">
+            <div className="flex items-center gap-2.5 sm:gap-3 text-xs sm:text-sm font-semibold tracking-wide text-[#115B38] dark:text-[#42C082] mb-2.5 sm:mb-3">
               <span
                 aria-hidden="true"
-                className="inline-block h-0.5 w-8 bg-[#FF6600]"
+                className="inline-block h-0.5 w-6 sm:w-8 bg-[#FF6600] shrink-0"
               />
               <span>Demande de devis</span>
             </div>
 
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-[#262626] dark:text-[#F3F5F3] text-balance">
+            <h2 className="text-xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-[#262626] dark:text-[#F3F5F3] text-balance break-words">
               Préparez votre demande sur mesure
             </h2>
 
-            <p className="mt-4 text-sm sm:text-base text-[#626B65] dark:text-[#B4BEB8] leading-relaxed">
+            <p className="mt-3 sm:mt-4 text-sm sm:text-base text-[#626B65] dark:text-[#B4BEB8] leading-relaxed break-words">
               Ce formulaire structure toutes les informations utiles selon le service choisi. Changer de service conserve vos informations déjà saisies.
             </p>
 
             {/* Encadré d'explication honnête de la transmission */}
-            <div className="mt-6 rounded-2xl bg-[#F7F8F6] dark:bg-[#1E2320] border border-[#E2E7E2] dark:border-[#2C332E] p-5 space-y-4">
+            <div className="mt-5 sm:mt-6 rounded-2xl bg-[#F7F8F6] dark:bg-[#1E2320] border border-[#E2E7E2] dark:border-[#2C332E] p-4 sm:p-5 space-y-4 min-w-0">
               <div className="flex items-start gap-3">
                 <Mail className="h-5 w-5 text-[#115B38] dark:text-[#42C082] shrink-0 mt-0.5" aria-hidden="true" />
-                <div>
+                <div className="min-w-0">
                   <h3 className="text-sm font-semibold text-[#262626] dark:text-[#F3F5F3]">
                     Fonctionnement transparent par e-mail
                   </h3>
@@ -391,7 +391,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-[#E2E7E2] dark:border-[#2C332E] text-xs space-y-2">
+              <div className="pt-3 border-t border-[#E2E7E2] dark:border-[#2C332E] text-xs space-y-2 min-w-0">
                 <label
                   htmlFor="recipientEmailSelect"
                   className="block font-medium text-[#262626] dark:text-[#F3F5F3]"
@@ -403,7 +403,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                   name="recipientEmail"
                   value={formData.recipientEmail}
                   onChange={handleInputChange}
-                  className="w-full rounded-xl border border-[#E2E7E2] dark:border-[#2C332E] bg-white dark:bg-[#141715] px-3 py-2.5 text-xs sm:text-sm font-medium text-[#115B38] dark:text-[#42C082] focus:border-[#115B38] dark:focus:border-[#FF6600]"
+                  className="w-full min-w-0 rounded-xl border border-[#E2E7E2] dark:border-[#2C332E] bg-white dark:bg-[#141715] px-3 py-2.5 text-xs sm:text-sm font-medium text-[#115B38] dark:text-[#42C082] focus:border-[#115B38] dark:focus:border-[#FF6600] truncate"
                 >
                   {siteConfig.emails.map((emailAddr) => (
                     <option key={emailAddr} value={emailAddr}>
@@ -418,33 +418,33 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
             </div>
 
             {/* Aperçu en direct du service actif */}
-            <div className="mt-6 rounded-2xl bg-[#EEF5F0] dark:bg-[#115B38]/20 border border-[#115B38]/15 dark:border-[#115B38]/40 p-5">
+            <div className="mt-4 sm:mt-6 rounded-2xl bg-[#EEF5F0] dark:bg-[#115B38]/20 border border-[#115B38]/15 dark:border-[#115B38]/40 p-4 sm:p-5 min-w-0">
               <div className="flex items-center justify-between gap-2 mb-2">
-                <span className="text-xs font-semibold text-[#115B38] dark:text-[#42C082]">
+                <span className="text-xs font-semibold text-[#115B38] dark:text-[#42C082] truncate">
                   Service actuellement sélectionné
                 </span>
-                <span className="text-xs font-mono font-bold text-[#FF6600]">
+                <span className="text-xs font-mono font-bold text-[#FF6600] shrink-0">
                   N° {currentService.number}
                 </span>
               </div>
-              <p className="text-base font-bold text-[#262626] dark:text-[#F3F5F3]">
+              <p className="text-sm sm:text-base font-bold text-[#262626] dark:text-[#F3F5F3] break-words">
                 {currentService.title}
               </p>
-              <p className="mt-1 text-xs text-[#626B65] dark:text-[#B4BEB8] leading-relaxed">
+              <p className="mt-1 text-xs text-[#626B65] dark:text-[#B4BEB8] leading-relaxed break-words">
                 {currentService.description}
               </p>
             </div>
           </div>
 
           {/* Colonne droite : Formulaire progressif */}
-          <div className="lg:col-span-7">
+          <div className="lg:col-span-7 min-w-0 w-full">
             <form
               onSubmit={handleSubmit}
               noValidate
-              className="rounded-2xl bg-[#F7F8F6] dark:bg-[#1E2320] border border-[#E2E7E2] dark:border-[#2C332E] p-5 sm:p-8 space-y-6"
+              className="rounded-2xl bg-[#F7F8F6] dark:bg-[#1E2320] border border-[#E2E7E2] dark:border-[#2C332E] p-4 sm:p-7 lg:p-8 space-y-5 sm:space-y-6 w-full min-w-0"
             >
               {/* 1. Choix du service recherché */}
-              <div>
+              <div className="min-w-0">
                 <label className="block text-sm font-semibold text-[#262626] dark:text-[#F3F5F3] mb-2">
                   Service recherché <span className="text-[#FF6600]">*</span>
                 </label>
@@ -462,7 +462,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                         role="radio"
                         aria-checked={isSelected}
                         onClick={() => onServiceChange(service.id)}
-                        className={`text-left rounded-xl px-4 py-3 text-xs sm:text-sm font-medium border transition-all flex items-center justify-between gap-2 ${
+                        className={`text-left rounded-xl px-3.5 sm:px-4 py-3 text-xs sm:text-sm font-medium border transition-all flex items-center justify-between gap-2 min-w-0 ${
                           isSelected
                             ? 'bg-[#115B38] text-white border-[#115B38] font-semibold shadow-xs'
                             : 'bg-white dark:bg-[#141715] text-[#262626] dark:text-[#F3F5F3] border-[#E2E7E2] dark:border-[#2C332E] hover:border-[#115B38]/50 dark:hover:border-[#FF6600]/60'
@@ -474,7 +474,9 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                         <span
                           aria-hidden="true"
                           className={`h-2.5 w-2.5 rounded-full shrink-0 ${
-                            isSelected ? 'bg-[#FF6600]' : 'bg-[#E2E7E2] dark:bg-[#2C332E]'
+                            isSelected
+                              ? 'bg-[#FF6600]'
+                              : 'bg-[#E2E7E2] dark:bg-[#2C332E]'
                           }`}
                         />
                       </button>
@@ -490,8 +492,8 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
               </div>
 
               {/* 2. Coordonnées du demandeur */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-[#E2E7E2] dark:border-[#2C332E]">
-                <div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4 pt-4 border-t border-[#E2E7E2] dark:border-[#2C332E]">
+                <div className="min-w-0">
                   <label
                     htmlFor="fullName"
                     className="block text-xs sm:text-sm font-semibold text-[#262626] dark:text-[#F3F5F3] mb-1.5"
@@ -522,7 +524,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                   )}
                 </div>
 
-                <div>
+                <div className="min-w-0">
                   <label
                     htmlFor="organization"
                     className="block text-xs sm:text-sm font-semibold text-[#262626] dark:text-[#F3F5F3] mb-1.5"
@@ -544,7 +546,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                   />
                 </div>
 
-                <div>
+                <div className="min-w-0">
                   <label
                     htmlFor="phone"
                     className="block text-xs sm:text-sm font-semibold text-[#262626] dark:text-[#F3F5F3] mb-1.5"
@@ -567,7 +569,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                   />
                 </div>
 
-                <div>
+                <div className="min-w-0">
                   <label
                     htmlFor="email"
                     className="block text-xs sm:text-sm font-semibold text-[#262626] dark:text-[#F3F5F3] mb-1.5"
@@ -594,15 +596,15 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
               {(errors.contact || errors.emailFormat) && (
                 <div
                   role="alert"
-                  className="rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800/60 px-4 py-3 text-xs text-red-800 dark:text-red-300 font-medium flex items-start gap-2"
+                  className="rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800/60 px-3.5 sm:px-4 py-3 text-xs text-red-800 dark:text-red-300 font-medium flex items-start gap-2"
                 >
                   <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
-                  <span>{errors.contact || errors.emailFormat}</span>
+                  <span className="break-words">{errors.contact || errors.emailFormat}</span>
                 </div>
               )}
 
               {/* 3. Champs dynamiques facultatifs selon le service sélectionné */}
-              <div className="rounded-xl bg-white dark:bg-[#141715] border border-[#E2E7E2] dark:border-[#2C332E] p-4 sm:p-5 space-y-4">
+              <div className="rounded-xl bg-white dark:bg-[#141715] border border-[#E2E7E2] dark:border-[#2C332E] p-3.5 sm:p-5 space-y-3.5 sm:space-y-4 min-w-0">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <h3 className="text-xs sm:text-sm font-semibold text-[#115B38] dark:text-[#42C082]">
                     Précisions pour : {currentService.title}
@@ -613,8 +615,8 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                 </div>
 
                 {selectedServiceId === 'restauration-collective' && (
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-                    <div>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div className="min-w-0">
                       <label
                         htmlFor="cateringGuestCount"
                         className="block text-xs font-medium text-[#262626] dark:text-[#E2E8E4] mb-1"
@@ -631,7 +633,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                         className={subInputClasses}
                       />
                     </div>
-                    <div>
+                    <div className="min-w-0">
                       <label
                         htmlFor="cateringFrequency"
                         className="block text-xs font-medium text-[#262626] dark:text-[#E2E8E4] mb-1"
@@ -648,7 +650,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                         className={subInputClasses}
                       />
                     </div>
-                    <div>
+                    <div className="min-w-0">
                       <label
                         htmlFor="cateringLocation"
                         className="block text-xs font-medium text-[#262626] dark:text-[#E2E8E4] mb-1"
@@ -669,8 +671,8 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                 )}
 
                 {selectedServiceId === 'evenementiel' && (
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-                    <div>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div className="min-w-0">
                       <label
                         htmlFor="eventType"
                         className="block text-xs font-medium text-[#262626] dark:text-[#E2E8E4] mb-1"
@@ -687,7 +689,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                         className={subInputClasses}
                       />
                     </div>
-                    <div>
+                    <div className="min-w-0">
                       <label
                         htmlFor="eventDate"
                         className="block text-xs font-medium text-[#262626] dark:text-[#E2E8E4] mb-1"
@@ -704,7 +706,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                         className={subInputClasses}
                       />
                     </div>
-                    <div>
+                    <div className="min-w-0">
                       <label
                         htmlFor="eventParticipants"
                         className="block text-xs font-medium text-[#262626] dark:text-[#E2E8E4] mb-1"
@@ -726,8 +728,8 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
 
                 {(selectedServiceId === 'commerce-general' ||
                   selectedServiceId === 'import-export') && (
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-                    <div>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div className="min-w-0">
                       <label
                         htmlFor="productType"
                         className="block text-xs font-medium text-[#262626] dark:text-[#E2E8E4] mb-1"
@@ -744,7 +746,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                         className={subInputClasses}
                       />
                     </div>
-                    <div>
+                    <div className="min-w-0">
                       <label
                         htmlFor="productQuantity"
                         className="block text-xs font-medium text-[#262626] dark:text-[#E2E8E4] mb-1"
@@ -761,7 +763,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                         className={subInputClasses}
                       />
                     </div>
-                    <div>
+                    <div className="min-w-0">
                       <label
                         htmlFor="originDestination"
                         className="block text-xs font-medium text-[#262626] dark:text-[#E2E8E4] mb-1"
@@ -782,8 +784,8 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                 )}
 
                 {selectedServiceId === 'prestations-services' && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                    <div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="min-w-0">
                       <label
                         htmlFor="serviceNature"
                         className="block text-xs font-medium text-[#262626] dark:text-[#E2E8E4] mb-1"
@@ -800,7 +802,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                         className={subInputClasses}
                       />
                     </div>
-                    <div>
+                    <div className="min-w-0">
                       <label
                         htmlFor="serviceConstraints"
                         className="block text-xs font-medium text-[#262626] dark:text-[#E2E8E4] mb-1"
@@ -822,8 +824,8 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
               </div>
 
               {/* 4. Localité, Date souhaitée et Budget indicatif */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4">
+                <div className="min-w-0">
                   <label
                     htmlFor="locality"
                     className="block text-xs sm:text-sm font-semibold text-[#262626] dark:text-[#F3F5F3] mb-1.5"
@@ -844,7 +846,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                   />
                 </div>
 
-                <div>
+                <div className="min-w-0">
                   <label
                     htmlFor="desiredDate"
                     className="block text-xs sm:text-sm font-semibold text-[#262626] dark:text-[#F3F5F3] mb-1.5"
@@ -864,7 +866,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                   />
                 </div>
 
-                <div>
+                <div className="min-w-0">
                   <label
                     htmlFor="budget"
                     className="block text-xs sm:text-sm font-semibold text-[#262626] dark:text-[#F3F5F3] mb-1.5"
@@ -888,7 +890,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
               </div>
 
               {/* 5. Description obligatoire du besoin */}
-              <div>
+              <div className="min-w-0">
                 <label
                   htmlFor="description"
                   className="block text-xs sm:text-sm font-semibold text-[#262626] dark:text-[#F3F5F3] mb-1.5"
@@ -907,7 +909,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                     errors.description ? 'error-description' : undefined
                   }
                   placeholder="Décrivez votre besoin, le contexte, ainsi que toute précision utile pour préparer notre échange..."
-                  className="w-full rounded-xl border border-[#E2E7E2] dark:border-[#2C332E] bg-white dark:bg-[#141715] px-3.5 py-3 text-sm text-[#262626] dark:text-[#F3F5F3] placeholder:text-[#626B65]/60 dark:placeholder:text-[#A3ADA7]/60 focus:border-[#115B38] dark:focus:border-[#FF6600] transition-colors"
+                  className="w-full min-w-0 rounded-xl border border-[#E2E7E2] dark:border-[#2C332E] bg-white dark:bg-[#141715] px-3 sm:px-3.5 py-3 text-sm text-[#262626] dark:text-[#F3F5F3] placeholder:text-[#626B65]/60 dark:placeholder:text-[#A3ADA7]/60 focus:border-[#115B38] dark:focus:border-[#FF6600] transition-colors"
                 />
                 {errors.description && (
                   <p
@@ -920,22 +922,22 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                 )}
               </div>
 
-              {/* 6. Boutons d'action de transmission */}
+              {/* 6. Boutons d'action de transmission adaptés aux petits mobiles */}
               <div className="pt-2 flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center justify-between gap-3">
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full sm:w-auto">
                   <button
                     type="submit"
-                    className="inline-flex min-h-[46px] items-center justify-center gap-2 rounded-xl bg-[#FF6600] px-5 sm:px-6 py-3.5 text-sm font-semibold text-[#262626] hover:bg-[#e55c00] active:scale-[0.99] transition-all whitespace-nowrap shrink-0 shadow-xs"
+                    className="inline-flex min-h-[46px] w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-[#FF6600] px-4 sm:px-6 py-3 sm:py-3.5 text-xs sm:text-sm font-semibold text-[#262626] hover:bg-[#e55c00] active:scale-[0.99] transition-all text-center shadow-xs"
                   >
                     <Mail className="h-4 w-4 shrink-0" aria-hidden="true" />
-                    <span>Préparer ma demande par e-mail</span>
+                    <span className="truncate">Préparer ma demande par e-mail</span>
                     <ExternalLink className="h-3.5 w-3.5 shrink-0 opacity-75" aria-hidden="true" />
                   </button>
 
                   <button
                     type="button"
                     onClick={handleCopyRequest}
-                    className="inline-flex min-h-[46px] items-center justify-center gap-2 rounded-xl border border-[#262626]/20 dark:border-[#2C332E] bg-white dark:bg-[#141715] px-4 py-3.5 text-sm font-medium text-[#262626] dark:text-[#F3F5F3] hover:border-[#115B38] dark:hover:border-[#FF6600] hover:text-[#115B38] dark:hover:text-[#FF6600] transition-colors whitespace-nowrap shrink-0"
+                    className="inline-flex min-h-[46px] w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-[#262626]/20 dark:border-[#2C332E] bg-white dark:bg-[#141715] px-4 py-3 sm:py-3.5 text-xs sm:text-sm font-medium text-[#262626] dark:text-[#F3F5F3] hover:border-[#115B38] dark:hover:border-[#FF6600] hover:text-[#115B38] dark:hover:text-[#FF6600] transition-colors text-center"
                   >
                     {copiedState ? (
                       <>
@@ -959,7 +961,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                       )}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex min-h-[46px] items-center justify-center gap-2 rounded-xl bg-[#115B38] px-4 py-3.5 text-sm font-semibold text-white hover:bg-[#0c4329] transition-colors whitespace-nowrap shrink-0"
+                      className="inline-flex min-h-[46px] w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-[#115B38] px-4 py-3 sm:py-3.5 text-xs sm:text-sm font-semibold text-white hover:bg-[#0c4329] transition-colors text-center"
                     >
                       <MessageSquare className="h-4 w-4 shrink-0" aria-hidden="true" />
                       <span>WhatsApp</span>
@@ -972,7 +974,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                   onClick={handleReset}
                   className="inline-flex items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium text-[#626B65] dark:text-[#A3ADA7] hover:text-[#262626] dark:hover:text-white hover:bg-white dark:hover:bg-[#141715] transition-colors"
                 >
-                  <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+                  <RotateCcw className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                   <span>Effacer les champs</span>
                 </button>
               </div>
@@ -982,20 +984,20 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                 <div
                   role="status"
                   aria-live="polite"
-                  className="rounded-xl bg-[#EEF5F0] dark:bg-[#115B38]/20 border border-[#115B38]/30 dark:border-[#115B38]/50 p-4 text-xs sm:text-sm text-[#262626] dark:text-[#F3F5F3] space-y-2"
+                  className="rounded-xl bg-[#EEF5F0] dark:bg-[#115B38]/20 border border-[#115B38]/30 dark:border-[#115B38]/50 p-3.5 sm:p-4 text-xs sm:text-sm text-[#262626] dark:text-[#F3F5F3] space-y-2 min-w-0"
                 >
                   <p className="font-semibold text-[#115B38] dark:text-[#42C082]">
                     Ouverture de votre messagerie en cours…
                   </p>
-                  <p className="text-[#626B65] dark:text-[#B4BEB8] leading-relaxed">
+                  <p className="text-[#626B65] dark:text-[#B4BEB8] leading-relaxed break-words">
                     Votre application de messagerie s’ouvre avec votre demande adressée à{' '}
-                    <strong className="text-[#262626] dark:text-white">
+                    <strong className="text-[#262626] dark:text-white break-all">
                       {formData.recipientEmail}
                     </strong>
                     . N’oubliez pas de cliquer sur <strong>Envoyer</strong> dans votre messagerie pour transmettre effectivement votre message.
                   </p>
                   {mailtoPreparedState.wasTruncated && (
-                    <p className="text-[#262626] dark:text-[#F3F5F3] bg-[#FFF2E8] dark:bg-[#FF6600]/15 p-2.5 rounded-lg border border-[#FF6600]/30">
+                    <p className="text-[#262626] dark:text-[#F3F5F3] bg-[#FFF2E8] dark:bg-[#FF6600]/15 p-2.5 rounded-lg border border-[#FF6600]/30 break-words">
                       Votre description étant particulièrement détaillée, le texte complet a été automatiquement copié dans votre presse-papiers. Vous pouvez le coller directement dans le corps de l’e-mail.
                     </p>
                   )}

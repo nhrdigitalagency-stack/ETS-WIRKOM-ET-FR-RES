@@ -94,7 +94,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F7F8F6] dark:bg-[#121413] text-[#262626] dark:text-[#F3F5F3] transition-colors duration-200">
+    <div className="min-h-screen w-full max-w-full overflow-x-hidden flex flex-col bg-[#F7F8F6] dark:bg-[#121413] text-[#262626] dark:text-[#F3F5F3] transition-colors duration-200">
       {/* Lien d'évitement pour l'accessibilité clavier */}
       <a
         href="#contenu-principal"
@@ -111,7 +111,7 @@ export default function App() {
       />
 
       {/* Contenu principal */}
-      <main id="contenu-principal" className="flex-1">
+      <main id="contenu-principal" className="flex-1 w-full max-w-full overflow-x-hidden">
         <Hero onSelectService={handleSelectServiceAndScroll} />
 
         <CompanyOverview onSelectService={handleSelectServiceAndScroll} />
