@@ -1,0 +1,69 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    --color-primary: #FF6600;
+    --color-primary-hover: #E05800;
+    --color-secondary: #115B38;
+    --color-secondary-dark: #0C4329;
+    --color-dark: #262626;
+    --color-grey: #BFBFBF;
+    --color-white: #FFFFFF;
+    --color-bg-light: #F7F8F6;
+    --color-green-pale: #EEF5F0;
+    --color-orange-pale: #FFF2E8;
+    --color-text-secondary: #626B65;
+    --color-border: #E2E7E2;
+  }
+
+  html {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    scroll-behavior: smooth;
+    color: #262626;
+    background-color: #F7F8F6;
+    overflow-x: hidden;
+  }
+
+  html.dark {
+    color: #F3F5F3;
+    background-color: #121413;
+    color-scheme: dark;
+  }
+
+  body {
+    overflow-x: hidden;
+    min-width: 320px;
+  }
+
+  section[id] {
+    scroll-margin-top: 6rem;
+  }
+
+  /* Accessibilité clavier visible */
+  :focus-visible {
+    outline: 2px solid #FF6600;
+    outline-offset: 2px;
+  }
+}
+
+/* Respect strict de prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Découpes géométriques inspirées de l'en-tête et du pied de page du document officiel */
+.clip-diagonal-right {
+  clip-path: polygon(0 0, 92% 0, 100% 100%, 0% 100%);
+}
+
+.clip-diagonal-left {
+  clip-path: polygon(6% 0, 100% 0, 100% 100%, 0% 100%);
+}

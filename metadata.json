@@ -1,0 +1,6 @@
+{
+  "name": "ETS WIRKOM ET FRÈRES",
+  "description": "Découvrez les activités des ETS WIRKOM ET FRÈRES à Yaoundé : commerce général, prestations de services, import-export, restauration collective et événementiel.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
